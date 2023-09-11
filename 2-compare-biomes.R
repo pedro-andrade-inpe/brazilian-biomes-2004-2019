@@ -31,34 +31,21 @@ total_biomes %>%
   kableExtra::kbl(format = "latex")
 
 intersec <- sf::st_intersection(biomes2004, biomes2019)
-
-#intersec_clean <- intersec[-c(1, 4, 9, 14, 17, 20),]
 sf::write_sf(intersec, "biomes-intersec.gpkg")
 
 intersec <- intersec %>%
   dplyr::mutate(area = round(sf::st_area(.)  %>% units::set_units("Mha"), 2)) %>%
   sf::st_drop_geometry() 
 
-dif19m04 <- sf::st_difference(biomes2019, sf::st_union(biomes2004) %>% sf::st_make_valid()) %>%
-  dplyr::mutate(area = sf::st_area(.)  %>% units::set_units("Mha")) %>%
-  sf::st_drop_geometry()
-
-dif04m19 <- sf::st_difference(biomes2004, sf::st_union(biomes2019) %>% sf::st_make_valid()) %>%
-  dplyr::mutate(area = sf::st_area(.)  %>% units::set_units("Mha")) %>%
-  sf::st_drop_geometry()
-
-result <- rbind(intersec, dif19m04, dif04m19) %>%
-  dplyr::group_by(name, name_biome) %>%
-  dplyr::arrange(.by_group = TRUE) %>%
-  dplyr::ungroup() %>%
+result <- intersec %>%
   dplyr::mutate(area = round(area, 2)) %>%
-  tidyr::pivot_wider(names_from = name, values_from = area, values_fill = list(area = units::set_units(0, "Mha")))
+  tidyr::pivot_wider(names_from = code_biome, values_from = area, values_fill = list(area = units::set_units(0, "Mha")))
 
-result <- cbind(result[, -2], result[, 2]) %>%
+result <- result[, c(1, 2, 5, 3, 6, 7, 4)] %>%
   janitor::adorn_totals( c("row", "col"))
 
-colnames(result)[9] <- "Total 2019"
-result$name_biome[8] <- "Total 2004"
+colnames(result)[8] <- "Total 2019"
+result$code_biome.1[7] <- "Total 2004"
 
 result %>%
   units::drop_units() %>%

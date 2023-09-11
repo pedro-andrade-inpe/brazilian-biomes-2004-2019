@@ -155,10 +155,12 @@ plot(caat1pol)
 
 mr2 <- mr2[-((p1+1):(p2-1)),]
 mr2 <- mr2[mr2[,1] > -38,] # there are some useless points in the data
-caat1pol <- sf::st_sf(code_biome = "MAT", geom = sf::st_sfc(sf::st_polygon(list(mr2)), crs = sf::st_crs(diff2004)))
-diff2004 <- rbind(diff2004, caat1pol)
+mat1pol <- sf::st_sf(code_biome = "MAT", geom = sf::st_sfc(sf::st_polygon(list(mr2)), crs = sf::st_crs(diff2004)))
+diff2004 <- rbind(diff2004, mat1pol)
 
-rbind(biomes2004, diff2004) %>%
+diff2004 <- diff2004 %>% sf::st_make_valid()
+
+rbind(biomes2004, diff2004) %>% 
   dplyr::filter(code_biome != "") %>%
   dplyr::group_by(code_biome) %>%
   dplyr::summarise() %>%

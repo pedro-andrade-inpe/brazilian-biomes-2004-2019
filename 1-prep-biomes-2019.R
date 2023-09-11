@@ -76,7 +76,9 @@ sf::st_area(diff2019[12266,]) # 13k m2
 sf::st_area(diff2019[12674,]) # 39k m2
 sf::st_area(diff2019[12985,]) #  8k m2
 
-rbind(biomes2019, diff2019[c(1:12137, 12139:12265, 12267:12673, 12675:12984, 12986:13285),]) %>%
+diff2019 <- diff2019 %>% sf::st_make_valid()
+
+rbind(biomes2019, diff2019) %>%
   dplyr::filter(code_biome != "") %>%
   dplyr::group_by(code_biome) %>%
   dplyr::summarise() %>%
