@@ -115,7 +115,7 @@ cer1pol <- sf::st_sf(code_biome = "CER", geom = sf::st_sfc(sf::st_polygon(list(c
 plot(cer1pol)
 diff2004 <- rbind(diff2004, cer1pol)
 
-mr2 <- mr2[-(p1:p2),]
+mr2 <- mr2[-((p1+1):(p2-1)),]
 
 p1 = which(abs(mr2[,1] +48.1425) < 1e-3 & abs(mr2[,2] +5.2732) < 1e-3)
 p2 = which(abs(mr2[,1] +48.1447) < 1e-2 & abs(mr2[,2] +5.2588) < 1e-2)
@@ -123,7 +123,7 @@ cer2 <- mr2[c(p1:p2, p1), ]
 cer2pol <- sf::st_sf(code_biome = "CER", geom = sf::st_sfc(sf::st_polygon(list(cer2)), crs = sf::st_crs(diff2004)))
 diff2004 <- rbind(diff2004, cer2pol)
 plot(cer2pol)
-mr2 <- mr2[-(p1:p2),]
+mr2 <- mr2[-((p1+1):(p2-1)),]
 
 amz1pol <- sf::st_sf(code_biome = "AMZ", geom = sf::st_sfc(sf::st_polygon(list(mr2)), crs = sf::st_crs(diff2004)))
 diff2004 <- rbind(diff2004, amz1pol)
@@ -143,7 +143,7 @@ cer1pol <- sf::st_sf(code_biome = "CER", geom = sf::st_sfc(sf::st_polygon(list(c
 diff2004 <- rbind(diff2004, cer1pol)
 plot(cer1pol)
 
-mr2 <- mr2[-(p1:p2),]
+mr2 <- mr2[-((p1+1):(p2-1)),]
 
 p1 = which(abs(mr2[,1] +37.1289) < 1e-2 & abs(mr2[,2] +9.9210) < 1e-2)
 p2 = which(abs(mr2[,1] +37.1543) < 1e-3 & abs(mr2[,2] +9.9488) < 1e-3)
@@ -153,7 +153,7 @@ caat1pol <- sf::st_sf(code_biome = "CAAT", geom = sf::st_sfc(sf::st_polygon(list
 diff2004 <- rbind(diff2004, caat1pol)
 plot(caat1pol)
 
-mr2 <- mr2[-(p1:p2),]
+mr2 <- mr2[-((p1+1):(p2-1)),]
 mr2 <- mr2[mr2[,1] > -38,] # there are some useless points in the data
 caat1pol <- sf::st_sf(code_biome = "MAT", geom = sf::st_sfc(sf::st_polygon(list(mr2)), crs = sf::st_crs(diff2004)))
 diff2004 <- rbind(diff2004, caat1pol)
