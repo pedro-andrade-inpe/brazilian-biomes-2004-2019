@@ -1,5 +1,5 @@
-
 require(dplyr)
+
 units::install_unit("Mha", "1e6 ha")
 
 origbiomes2004 <- sf::read_sf("biomes-2004-before-intersec.gpkg")
@@ -8,19 +8,11 @@ origbiomes2019 <- sf::read_sf("biomes-2019-before-intersec.gpkg")
 biomes2004 <- sf::read_sf("biomes-2004.gpkg")
 biomes2019 <- sf::read_sf("biomes-2019.gpkg")
 
-par(mfcol=c(1,2))
-plot(sf::st_geometry(biomes2019))
-plot(sf::st_geometry(biomes2004))
-
 area2004 <- round(sf::st_area(biomes2004) %>% units::set_units("Mha"), 2)
 area2019 <- round(sf::st_area(biomes2019) %>% units::set_units("Mha"), 2)
 
 area2004 <- c(area2004, sum(area2004))
 area2019 <- c(area2019, sum(area2019))
-
-brazil <- geobr::read_country()
-
-sf::st_area(brazil) %>% units::set_units("Mha")
 
 total_biomes <- tibble::tibble(name = c(biomes2004$code_biome, "Brazil"), area2004, area2019) %>%
   dplyr::mutate(delta = round((units::drop_units(area2019 / area2004) - 1) * 100, 2)) %>%

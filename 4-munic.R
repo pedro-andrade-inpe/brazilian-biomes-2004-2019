@@ -52,9 +52,6 @@ munic5 <- munic2 %>%
   dplyr::mutate(n5 = n) %>%
   dplyr::select(abbrev_state, n5)
 
-# 835 with more than 5% change in the biome
-# 176 with more than 90%
-# 163 municipalities with 100% change in the biome
 munic2 %>% 
   dplyr::filter(perc >= 5) %>%
   dim()
@@ -98,13 +95,11 @@ for(i in 1:6){
 }
 
 colnames(result) <- c("not", "added", "removed", "stayed")
-result
 
 result <- result %>%
   dplyr::mutate(tot2004 = removed + stayed) %>%
   dplyr::mutate(tot2019 = added + stayed) %>%
   dplyr::select(tot2004, added, removed, tot2019)
-
 
 result %>%
   kableExtra::kbl(format = "latex")
