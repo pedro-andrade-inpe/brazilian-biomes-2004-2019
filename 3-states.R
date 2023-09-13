@@ -3,9 +3,9 @@ require(magrittr)
 states <- geobr::read_state() %>%
   sf::st_make_valid()
 
-sf::write_sf(states, "states.gpkg")
+sf::write_sf(states, "results/states.gpkg")
 
-intersec <- sf::read_sf("biomes-intersec.gpkg")
+intersec <- sf::read_sf("results/biomes-intersec.gpkg")
 
 intersec <- intersec[-c(1, 4, 9, 14, 17, 20),]
 
@@ -28,8 +28,6 @@ states2 <- states %>%
   dplyr::mutate(perc = round(units::drop_units(overlap / area * 100), 2)) %>%
   dplyr::arrange(desc(perc))
 
-
 states2[1:10,] %>%
   units::drop_units() %>%
   kableExtra::kbl(format = "latex")
-

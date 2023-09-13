@@ -9,12 +9,12 @@ biomes2004 <- geobr::read_biomes(year = 2004) %>%
   sfheaders::sf_remove_holes() %>%
   dplyr::select(code_biome) 
 
-sf::write_sf(biomes2004, "biomes-2004-before-intersec.gpkg")
+sf::write_sf(biomes2004, "results/biomes-2004-before-intersec.gpkg")
 
 sf::st_agr(biomes2004) <- "constant"
 biomes2004 <- sf::st_intersection(biomes2004, brazil) %>% sf::st_make_valid()
 
-sf::write_sf(biomes2004, "biomes2004-after-intersec.gpkg")
+sf::write_sf(biomes2004, "results/biomes2004-after-intersec.gpkg")
 
 diff2004 <- sf::st_difference(brazil, sf::st_union(biomes2004)) %>%
   sf::st_cast("POLYGON")
@@ -22,7 +22,7 @@ diff2004 <- sf::st_difference(brazil, sf::st_union(biomes2004)) %>%
 dim(diff2004) # 5200  polygons in brazil but not in biomes 2004 that need to be handled
 sum(units::set_units(sf::st_area(diff2004), "Mha")) # 15.23 [Mha]
 
-sf::write_sf(diff2004, "diff-2004.gpkg")
+sf::write_sf(diff2004, "results/diff-2004.gpkg")
 
 # the buffer and overlap takes a while to process
 relations <- sf::st_overlaps(biomes2004, diff2004 %>% sf::st_buffer(0.00001)) # 1.11m of buffer
@@ -34,7 +34,7 @@ for(i in 1:6){
 
 # ignore those polygons that have relation with more than one biome
 repeated <- unlist(relations)[which(duplicated(unlist(relations)))]
-sf::write_sf(diff2004[repeated, ], "repeated-2004.gpkg")
+sf::write_sf(diff2004[repeated, ], "results/repeated-2004.gpkg")
 
 diff2004$code_biome[repeated] <- ""
 
@@ -61,43 +61,7 @@ for(i in 1:length(repeated)){
 }
 
 diff2004$code_biome[repeated[1]] <- "" # more than one biome (see below)
-#diff2004$code_biome[repeated[2]] <- "AMZ"
 diff2004$code_biome[repeated[3]] <- "" # more than one biome (see below)
-#diff2004$code_biome[repeated[4]] <- "MAT"
-#diff2004$code_biome[repeated[5]] <- "MAT"
-#diff2004$code_biome[repeated[6]] <- "AMZ"
-#diff2004$code_biome[repeated[7]] <- "MAT"
-#diff2004$code_biome[repeated[8]] <- "CER"
-#diff2004$code_biome[repeated[9]] <- "MAT"
-#diff2004$code_biome[repeated[10]] <- "CER"
-#diff2004$code_biome[repeated[11]] <- "MAT"
-#diff2004$code_biome[repeated[12]] <- "CER"
-#diff2004$code_biome[repeated[13]] <- "CAAT"
-#diff2004$code_biome[repeated[14]] <- "MAT"
-#diff2004$code_biome[repeated[15]] <- "CAAT"
-#diff2004$code_biome[repeated[16]] <- "CAAT"
-#diff2004$code_biome[repeated[17]] <- "MAT"
-#diff2004$code_biome[repeated[18]] <- "MAT"
-#diff2004$code_biome[repeated[19]] <- "MAT"
-#diff2004$code_biome[repeated[20]] <- "MAT"
-#diff2004$code_biome[repeated[21]] <- "CAAT"
-#diff2004$code_biome[repeated[22]] <- "CER"
-#diff2004$code_biome[repeated[23]] <- "CER"
-#diff2004$code_biome[repeated[24]] <- "CER"
-#diff2004$code_biome[repeated[25]] <- "CER"
-#diff2004$code_biome[repeated[26]] <- "CAAT"
-#diff2004$code_biome[repeated[27]] <- "CAAT"
-#diff2004$code_biome[repeated[28]] <- "CER"
-#diff2004$code_biome[repeated[29]] <- "CER"
-#diff2004$code_biome[repeated[30]] <- "CER"
-#diff2004$code_biome[repeated[31]] <- "PTN"
-#diff2004$code_biome[repeated[32]] <- "MAT"
-#diff2004$code_biome[repeated[33]] <- "MAT"
-#diff2004$code_biome[repeated[34]] <- "MAT"
-#diff2004$code_biome[repeated[35]] <- "MAT"
-#diff2004$code_biome[repeated[36]] <- "MAT"
-#diff2004$code_biome[repeated[37]] <- "MAT"
-#diff2004$code_biome[repeated[38]] <- "MAT"
 
 # split polygons that share more than one biome
 # the intersection points were extracted visually using QGIS
@@ -166,4 +130,4 @@ rbind(biomes2004, diff2004) %>%
   dplyr::summarise() %>%
   sf::st_cast() %>%
   sf::st_make_valid() %>%
-  sf::write_sf("biomes-2004.gpkg")
+  sf::write_sf("results/biomes-2004.gpkg")

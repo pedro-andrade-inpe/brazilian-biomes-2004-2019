@@ -2,11 +2,11 @@ require(dplyr)
 
 units::install_unit("Mha", "1e6 ha")
 
-origbiomes2004 <- sf::read_sf("biomes-2004-before-intersec.gpkg")
-origbiomes2019 <- sf::read_sf("biomes-2019-before-intersec.gpkg")
+origbiomes2004 <- sf::read_sf("results/biomes-2004-before-intersec.gpkg")
+origbiomes2019 <- sf::read_sf("results/biomes-2019-before-intersec.gpkg")
 
-biomes2004 <- sf::read_sf("biomes-2004.gpkg")
-biomes2019 <- sf::read_sf("biomes-2019.gpkg")
+biomes2004 <- sf::read_sf("results/biomes-2004.gpkg")
+biomes2019 <- sf::read_sf("results/biomes-2019.gpkg")
 
 area2004 <- round(sf::st_area(biomes2004) %>% units::set_units("Mha"), 2)
 area2019 <- round(sf::st_area(biomes2019) %>% units::set_units("Mha"), 2)
@@ -23,7 +23,7 @@ total_biomes %>%
   kableExtra::kbl(format = "latex")
 
 intersec <- sf::st_intersection(biomes2004, biomes2019)
-sf::write_sf(intersec, "biomes-intersec.gpkg")
+sf::write_sf(intersec, "results/biomes-intersec.gpkg")
 
 intersec <- intersec %>%
   dplyr::mutate(area = round(sf::st_area(.)  %>% units::set_units("Mha"), 2)) %>%

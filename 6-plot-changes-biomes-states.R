@@ -4,7 +4,7 @@ require(tmap)
 states <- geobr::read_state() %>%
   sf::st_make_valid()
 
-intersec <- sf::read_sf("biomes-intersec.gpkg")
+intersec <- sf::read_sf("results/biomes-intersec.gpkg")
 intersec <- intersec[-c(1, 4, 9, 14, 17, 20), ] # remove the intersections with the biome itself
 
 RColorBrewer::brewer.pal(7, "Set3")

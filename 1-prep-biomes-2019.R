@@ -15,12 +15,12 @@ biomes2019 <- geobr::read_biomes(year = 2019) %>%
                                            "Pampa" = "PMP",
                                            "Pantanal" = "PTN"))
 
-sf::write_sf(biomes2019, "biomes-2019-before-intersec.gpkg")
+sf::write_sf(biomes2019, "results/biomes-2019-before-intersec.gpkg")
 
 sf::st_agr(biomes2019) <- "constant"
 biomes2019 <- sf::st_intersection(biomes2019, brazil) %>% sf::st_make_valid()
 
-sf::write_sf(biomes2019, "biomes2019-after-intersec.gpkg")
+sf::write_sf(biomes2019, "results/biomes2019-after-intersec.gpkg")
 
 diff2019 <- sf::st_difference(brazil, sf::st_union(biomes2019) %>% sf::st_make_valid()) %>%
   sf::st_cast("POLYGON")
@@ -29,7 +29,7 @@ dim(diff2019) # 13285 polygons in brazil but not in biomes 2004 that need to be 
 
 sum(units::set_units(sf::st_area(diff2019), "km^2")) #   5486.6 [km^2]
 
-sf::write_sf(diff2019, "diff-2019.gpkg")
+sf::write_sf(diff2019, "results/diff-2019.gpkg")
 
 # the buffer and overlap takes a while to process (even more in the 2019 data)
 relations <- sf::st_overlaps(biomes2019, diff2019 %>% sf::st_buffer(0.00001)) # 1.11m of buffer
@@ -41,7 +41,7 @@ for(i in 1:6){
 
 # ignore those polygons that have relation with more than one biome
 repeated <- unlist(relations)[which(duplicated(unlist(relations)))]
-sf::write_sf(diff2019[repeated, ], "repeated-2019.gpkg")
+sf::write_sf(diff2019[repeated, ], "results/repeated-2019.gpkg")
 
 diff2019[repeated, ]$code_biome = ""
 
@@ -84,4 +84,4 @@ rbind(biomes2019, diff2019) %>%
   dplyr::summarise() %>%
   sf::st_cast() %>%
   sf::st_make_valid() %>%
-  sf::write_sf("biomes-2019.gpkg")
+  sf::write_sf("results/biomes-2019.gpkg")

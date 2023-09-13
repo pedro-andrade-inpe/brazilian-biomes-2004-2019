@@ -1,6 +1,8 @@
 require(magrittr)
 
-intersec <- sf::read_sf("biomes-intersec.gpkg")
+units::install_unit("Mha", "1e6 ha")
+
+intersec <- sf::read_sf("results/biomes-intersec.gpkg")
 
 intersec <- intersec[-c(1, 4, 9, 14, 17, 20),]
 
@@ -29,26 +31,26 @@ munic2 <- munic %>%
   dplyr::mutate(perc = round(units::drop_units(overlap / area * 100), 2)) %>%
   dplyr::arrange(desc(perc))
 
-write.csv(munic2, "overlap-munic2.csv")
+write.csv(munic2, "results/overlap-munic2.csv")
 
 munic90 <- munic2 %>% 
   dplyr::filter(perc >= 90) %>%
   dplyr::group_by(abbrev_state) %>%
-  count() %>%
+  dplyr::count() %>%
   dplyr::mutate(n90 = n) %>%
   dplyr::select(abbrev_state, n90)
 
 munic50 <- munic2 %>% 
   dplyr::filter(perc >= 50) %>%
   dplyr::group_by(abbrev_state) %>%
-  count() %>%
+  dplyr::count() %>%
   dplyr::mutate(n50 = n) %>%
   dplyr::select(abbrev_state, n50)
 
 munic5 <- munic2 %>% 
   dplyr::filter(perc >= 5) %>%
   dplyr::group_by(abbrev_state) %>%
-  count() %>%
+  dplyr::count() %>%
   dplyr::mutate(n5 = n) %>%
   dplyr::select(abbrev_state, n5)
 
@@ -64,8 +66,8 @@ result %>%
   units::drop_units() %>%
   kableExtra::kbl(format = "latex")
 
-biomes2004 <- sf::read_sf("biomes-2004.gpkg")
-biomes2019 <- sf::read_sf("biomes-2019.gpkg")
+biomes2004 <- sf::read_sf("results/biomes-2004.gpkg")
+biomes2019 <- sf::read_sf("results/biomes-2019.gpkg")
 
 overlap2004 <- sf::st_intersects(biomes2004, munic)
 overlap2019 <- sf::st_intersects(biomes2019, munic)
@@ -84,7 +86,7 @@ for(i in 1:6){
   munic[[biome]] <- paste0(munic[[paste0(biome, 2004)]], munic[[paste0(biome, 2019)]])
 }  
 
-sf::write_sf(munic, "municipalities.gpkg")
+sf::write_sf(munic, "results/municipalities.gpkg")
 
 result <- data.frame()
 for(i in 1:6){

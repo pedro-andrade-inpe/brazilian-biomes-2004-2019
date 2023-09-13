@@ -2,11 +2,11 @@
 require(magrittr)
 require(tmap)
 
-origbiomes2004 <- sf::read_sf("biomes-2004-before-intersec.gpkg") %>% dplyr::arrange(code_biome)
-origbiomes2019 <- sf::read_sf("biomes-2019-before-intersec.gpkg") %>% dplyr::arrange(code_biome)
+origbiomes2004 <- sf::read_sf("results/biomes-2004-before-intersec.gpkg") %>% dplyr::arrange(code_biome)
+origbiomes2019 <- sf::read_sf("results/biomes-2019-before-intersec.gpkg") %>% dplyr::arrange(code_biome)
 
-biomes2004 <- sf::read_sf("biomes-2004.gpkg")
-biomes2019 <- sf::read_sf("biomes-2019.gpkg")
+biomes2004 <- sf::read_sf("results/biomes-2004.gpkg")
+biomes2019 <- sf::read_sf("results/biomes-2019.gpkg")
 
 biomes <- c("Amazonia", "Caatinga", "Cerrado", "Mata Atlantica", "Pampa", "Pantanal")
 origbiomes2004$biome <- biomes
@@ -43,22 +43,28 @@ legend.map <-
   tmap::tm_shape(origbiomes2019) +
   tmap::tm_polygons("Biomes", palette = colors) +
   tm_layout(legend.only = TRUE, 
-            legend.width = 5, #outer.margins = rep(0, 4),
             legend.title.size = 1.5, frame.double.line = TRUE,
             legend.text.size = 1.1,
-            legend.position = c("left","bottom"))#, legend.text.size = 10)
+            legend.position = c("left","top"))
 
-pdf("biomes.pdf")
+pdf("biomes-orig.pdf", width = 6, height = 3)
 grid::grid.newpage()
-page.layout <- grid::grid.layout(nrow = 2, ncol = 2)
+page.layout <- grid::grid.layout(nrow = 1, ncol = 2)
 grid::pushViewport(grid::viewport(layout = page.layout))
 
 print(orig2004, vp=grid::viewport(layout.pos.row = 1, layout.pos.col = 1))
-print(orig2019, vp=grid::viewport(layout.pos.row = 2, layout.pos.col = 1))
-print(final2004, vp=grid::viewport(layout.pos.row = 1, layout.pos.col = 2))
-print(final2019, vp=grid::viewport(layout.pos.row = 2, layout.pos.col = 2))
+print(orig2019, vp=grid::viewport(layout.pos.row = 1, layout.pos.col = 2))
 dev.off()
 
-pdf("biomes-legend.pdf")
-print(legend.map, vp=grid::viewport(layout.pos.row = 2, layout.pos.col = 3))
+pdf("biomes-final.pdf", width = 6, height = 3)
+grid::grid.newpage()
+page.layout <- grid::grid.layout(nrow = 1, ncol = 2)
+grid::pushViewport(grid::viewport(layout = page.layout))
+
+print(final2004, vp=grid::viewport(layout.pos.row = 1, layout.pos.col = 1))
+print(final2019, vp=grid::viewport(layout.pos.row = 1, layout.pos.col = 2))
+dev.off()
+
+pdf("biomes-legend.pdf", width = 2, height = 3)
+print(legend.map)
 dev.off()
