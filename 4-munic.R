@@ -60,7 +60,9 @@ munic2 %>%
 
 result <- dplyr::inner_join(munic5, munic50, by = "abbrev_state") %>%
   dplyr::inner_join(munic90, by = "abbrev_state") %>%
-  dplyr::arrange(desc(n5))
+  dplyr::arrange(desc(n5)) %>%
+  janitor::adorn_totals( c("row"))
+
 
 result %>%
   units::drop_units() %>%
