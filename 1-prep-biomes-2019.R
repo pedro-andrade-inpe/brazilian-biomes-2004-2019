@@ -1,6 +1,7 @@
 require(magrittr)
 
 brazil <- geobr::read_country()
+units::install_unit("Mha", "1e6 ha")
 
 biomes2019 <- geobr::read_biomes(year = 2019) %>%
   dplyr::filter(name_biome != "Sistema Costeiro") %>%
@@ -27,7 +28,7 @@ diff2019 <- sf::st_difference(brazil, sf::st_union(biomes2019) %>% sf::st_make_v
 
 dim(diff2019) # 13285 polygons in brazil but not in biomes 2004 that need to be handled
 
-sum(units::set_units(sf::st_area(diff2019), "km^2")) #   5486.6 [km^2]
+sum(units::set_units(sf::st_area(diff2019), "Mha")) #   0.54 [Mha]
 
 sf::write_sf(diff2019, "results/diff-2019.gpkg")
 
