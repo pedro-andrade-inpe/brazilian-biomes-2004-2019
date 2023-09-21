@@ -34,18 +34,18 @@ to["New Biome"] <- c("Amazonia", "Caatinga", "Cerrado", "Mata Atlantica", "Pampa
 pdf("changes-biomes-states.pdf", width = 3, height = 3)
 tmap::tm_shape(states, bbox = c(-60, -31.0, -27.7, -2.7)) +
   tmap::tm_polygons(col = "#404143", alpha = 0.7) +
-  tmap::tm_shape(amz) +
-  tmap::tm_polygons(alpha = 0.4, col = "blue", border.col = "blue", lty = 0) +
-  tmap::tm_shape(mat) +
-  tmap::tm_polygons(alpha = 0.4, col = "red", border.col = "red", lty = 0) +
+#  tmap::tm_shape(amz) +
+#  tmap::tm_polygons(alpha = 0.4, col = "blue", border.col = "blue", lty = 0) +
+#  tmap::tm_shape(mat) +
+#  tmap::tm_polygons(alpha = 0.4, col = "red", border.col = "red", lty = 0) +
   tmap::tm_shape(to) +
   tmap::tm_polygons("New Biome", palette = colors, lty = 0) +
 #  tmap::tm_shape(legalamaz) +
 #  tmap::tm_polygons(alpha = 0, border.col = "red") +
-  tmap::tm_add_legend(
-    type = "fill",
-    labels = c("Subject to Law 12,651/2012", "Subject to Law 11,428/2006"),
-    col = c("#4949b0", "#af494a"),) +
+#  tmap::tm_add_legend(
+#    type = "fill",
+#    labels = c("Subject to Law 12,651/2012", "Subject to Law 11,428/2006"),
+#    col = c("#4949b0", "#af494a"),) +
   tmap::tm_legend(
     scale = 0.4,
     title.size = 1.5,
