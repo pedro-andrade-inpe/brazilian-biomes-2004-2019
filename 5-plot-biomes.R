@@ -8,17 +8,15 @@ munic <- geobr::read_municipality() %>%
 origbiomes2004 <- sf::read_sf("results/biomes-2004-before-intersec.gpkg") %>% dplyr::arrange(code_biome)
 origbiomes2019 <- sf::read_sf("results/biomes-2019-before-intersec.gpkg") %>% dplyr::arrange(code_biome)
 
-pdf("biomes-border.pdf", width = 3, height = 3)
-tmap::tm_shape(munic, bbox = c(-60.05, -15.3, -54, -11)) +
-  tmap::tm_polygons() +
-  tmap::tm_shape(origbiomes2019) +
+pdf("biomes-border.pdf", width = 3, height = 2)
+tmap::tm_shape(origbiomes2019, bbox = c(-60.05, -15.3, -54, -11)) +
   tmap::tm_polygons(alpha = 0.5, border.col = "blue") +
   tmap::tm_shape(origbiomes2004) +
   tmap::tm_polygons(alpha = 0.5, border.col = "orange") +
   tmap::tm_add_legend(
     type = "line",
-    labels = c("Biomes 2004", "Biomes 2019", "Municipalities"),
-    col = c("orange", "blue", "gray")) +
+    labels = c("Biomes 2004", "Biomes 2019"),
+    col = c("orange", "blue")) +
   tmap::tm_legend(position = c("right","bottom"))
 dev.off()
 
