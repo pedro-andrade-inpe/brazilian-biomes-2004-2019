@@ -29,7 +29,7 @@ to <- intersec %>%
   dplyr::summarize()
 
 colors = c("#b8fd00", "#fffdae", "#fdc5b0", "#d9fbab", "#fceed3", "#fee7ff")
-to["New Biome"] <- c("Amazonia", "Caatinga", "Cerrado", "Mata Atlantica", "Pampa", "Pantanal")
+to["New Biome"] <- c("Amazônia", "Caatinga", "Cerrado", "Mata Atlântica", "Pampa", "Pantanal")
 
 pdf("changes-biomes-states.pdf", width = 3, height = 3)
 tmap::tm_shape(states, bbox = c(-60, -31.0, -27.7, -2.7)) +

@@ -23,7 +23,7 @@ dev.off()
 biomes2004 <- sf::read_sf("results/biomes-2004.gpkg")
 biomes2019 <- sf::read_sf("results/biomes-2019.gpkg")
 
-biomes <- c("Amazonia", "Caatinga", "Cerrado", "Mata Atlantica", "Pampa", "Pantanal")
+biomes <- c("Amazônia", "Caatinga", "Cerrado", "Mata Atlântica", "Pampa", "Pantanal")
 origbiomes2004$biome <- biomes
 origbiomes2019$biome <- biomes
 biomes2004$biome <- biomes
