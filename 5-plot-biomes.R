@@ -17,7 +17,8 @@ tmap::tm_shape(origbiomes2019, bbox = c(-60.05, -15.3, -54, -11)) +
     type = "line",
     labels = c("Biomes 2004", "Biomes 2019"),
     col = c("orange", "blue")) +
-  tmap::tm_legend(position = c("right","bottom"))
+  tmap::tm_legend(position = c("right","top")) +
+  tmap::tm_scale_bar(breaks = c(0, 50, 100, 200), position = "RIGHT")
 dev.off()
 
 biomes2004 <- sf::read_sf("results/biomes-2004.gpkg")
@@ -37,9 +38,11 @@ biomes2019$Biomes <- biomes2019$biome
 orig2004 <- tmap::tm_shape(origbiomes2004) +
   tmap::tm_polygons("biome", palette = colors) +
   tmap::tm_credits("Biomes in 2004\nas defined by IBGE", size = 1.4, position = "left", align = "left") +
-  tm_legend(
+  tmap::tm_legend(
     scale = 0.4,
-    legend.show = FALSE)
+    legend.show = FALSE) +
+  tmap::tm_scale_bar(breaks = c(0, 250, 500, 1000), position = "RIGHT", text.size = 1.4)
+
 
 orig2019 <- tmap::tm_shape(origbiomes2019) +
   tmap::tm_polygons("Biomes", palette = colors) +
@@ -54,13 +57,14 @@ final2004 <- tmap::tm_shape(biomes2004) +
   tmap::tm_polygons("biome", palette = colors) +
   tmap::tm_credits("Biomes in 2004\nafter processing", size = 1.4, position = "left", align = "left") + tm_legend(#legend.only = TRUE, 
     scale = 0.4,
-    show = FALSE)
+    show = FALSE) +
+  tmap::tm_scale_bar(breaks = c(0, 250, 500, 1000), position = "RIGHT", text.size = 1.4)
 
 final2019 <-  
   tmap::tm_shape(biomes2019) +
   tmap::tm_polygons("Biomes", palette = colors) +
   tmap::tm_credits("Biomes in 2019\nafter processing", size = 1.4, position = "left", align = "left") +
-  tm_legend(
+  tmap::tm_legend(
           scale = 0.4,
           title.size = 1.5,
           text.size = 1.1,
@@ -75,7 +79,7 @@ print(orig2004, vp=grid::viewport(layout.pos.row = 1, layout.pos.col = 1))
 print(orig2019, vp=grid::viewport(layout.pos.row = 1, layout.pos.col = 2))
 dev.off()
 
-pdf("biomes-final2.pdf", width = 6, height = 3)
+pdf("biomes-final.pdf", width = 6, height = 3)
 grid::grid.newpage()
 page.layout <- grid::grid.layout(nrow = 1, ncol = 2)
 grid::pushViewport(grid::viewport(layout = page.layout))

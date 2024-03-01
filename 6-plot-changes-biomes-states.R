@@ -50,5 +50,7 @@ tmap::tm_shape(states, bbox = c(-60, -31.0, -27.7, -2.7)) +
     scale = 0.4,
     title.size = 1.5,
     text.size = 1.1,
-    position = c("right","bottom"))
+    position = c("right","bottom")) +
+  tmap::tm_scale_bar(breaks = c(0, 250, 500, 1000), position = "RIGHT", text.size = 1)
+
 dev.off()

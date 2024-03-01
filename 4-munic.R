@@ -6,7 +6,7 @@ intersec <- sf::read_sf("results/biomes-intersec.gpkg")
 
 intersec <- intersec[-c(1, 4, 9, 14, 17, 20),]
 
-munic <- geobr::read_municipality() %>%
+munic <- geobr::read_municipality(year = 2022) %>%
   dplyr::mutate(name = paste0(name_muni, "-", abbrev_state)) %>%
   sf::st_make_valid() %>%
   sf::st_transform(sf::st_crs(intersec))
