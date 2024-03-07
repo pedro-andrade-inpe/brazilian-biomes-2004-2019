@@ -28,6 +28,6 @@ states2 <- states %>%
   dplyr::mutate(perc = round(units::drop_units(overlap / area * 100), 2)) %>%
   dplyr::arrange(desc(perc))
 
-states2[1:10,] %>%
+states2[1:10, ] %>%
   units::drop_units() %>%
   kableExtra::kbl(format = "latex")

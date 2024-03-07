@@ -1,9 +1,12 @@
 require(magrittr)
 
-brazil <- geobr::read_country()
+brazil <- geobr::read_country() %>% sf::st_make_valid()
 units::install_unit("Mha", "1e6 ha")
 
-biomes2019 <- geobr::read_biomes(year = 2019) %>%
+biomes2019 <- sf::read_sf("Biomas_250mil/lm_bioma_250.shp") %>%
+  sf::st_transform(sf::st_crs(brazil)) %>%
+  sf::st_make_valid() %>%
+  dplyr::mutate(name_biome = Bioma) %>%
   dplyr::filter(name_biome != "Sistema Costeiro") %>%
   dplyr::arrange(name_biome) %>%
   dplyr::mutate(code_biome = name_biome) %>%
@@ -19,6 +22,7 @@ biomes2019 <- geobr::read_biomes(year = 2019) %>%
 sf::write_sf(biomes2019, "results/biomes-2019-before-intersec.gpkg")
 
 sf::st_agr(biomes2019) <- "constant"
+sf::sf_use_s2(FALSE)
 biomes2019 <- sf::st_intersection(biomes2019, brazil) %>% sf::st_make_valid()
 
 sf::write_sf(biomes2019, "results/biomes2019-after-intersec.gpkg")
@@ -26,13 +30,14 @@ sf::write_sf(biomes2019, "results/biomes2019-after-intersec.gpkg")
 diff2019 <- sf::st_difference(brazil, sf::st_union(biomes2019) %>% sf::st_make_valid()) %>%
   sf::st_cast("POLYGON")
 
-dim(diff2019) # 13285 polygons in brazil but not in biomes 2004 that need to be handled
+dim(diff2019) # 13285 polygons in Brazil but not in biomes 2019 that need to be handled
+# 10224 in the newest version
 
 sum(units::set_units(sf::st_area(diff2019), "Mha")) #   0.54 [Mha]
 
 sf::write_sf(diff2019, "results/diff-2019.gpkg")
 
-# the buffer and overlap takes a while to process (even more in the 2019 data)
+# the buffer and overlap takes a while to process (even more for the 2019 data)
 relations <- sf::st_overlaps(biomes2019, diff2019 %>% sf::st_buffer(0.00001)) # 1.11m of buffer
 
 diff2019$code_biome <- ""
@@ -47,6 +52,7 @@ sf::write_sf(diff2019[repeated, ], "results/repeated-2019.gpkg")
 diff2019[repeated, ]$code_biome = ""
 
 sum(sf::st_area(diff2019[repeated, ])) %>% units::set_units("km^2") # 194.74km2
+# reduced to 178.26km2
 
 sf::st_agr(diff2019) <- "constant"
 sf::st_agr(biomes2019) <- "constant"
@@ -70,14 +76,17 @@ for(i in 1:length(repeated)){
   diff2019$code_biome[repeated[i]] <- biome
 }
 
-# there are some problems with grouping 4 polygons. they are ignored
-# their areas are very small:
-sf::st_area(diff2019[12138,]) # 34k m2
-sf::st_area(diff2019[12266,]) # 13k m2
-sf::st_area(diff2019[12674,]) # 39k m2
-sf::st_area(diff2019[12985,]) #  8k m2
+# 10224 polygons
+dim(diff2019)
 
-diff2019 <- diff2019 %>% sf::st_make_valid()
+diff2019 <- diff2019 %>% 
+  sf::st_make_valid() %>%
+  dplyr::mutate(geometry = geom)
+  
+sf::st_geometry(diff2019) <- "geometry"
+
+diff2019 <- diff2019 %>% 
+  dplyr::select(code_biome, geometry)
 
 rbind(biomes2019, diff2019) %>%
   dplyr::filter(code_biome != "") %>%
