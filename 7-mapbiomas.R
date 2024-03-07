@@ -21,7 +21,7 @@ mapbiomas2022_2values <- terra::classify(mapbiomas2022, m1, others=0)
 terra::writeRaster(mapbiomas2022_2values, "c:/Users/pedro/Downloads/brasil_coverage_natveg.tif")
 ##############################################################################
 
-intersecsf <- sf::read_sf("results/biomes-intersec-4326.gpkg")
+intersecsf <- sf::read_sf("results/biomes-intersec.gpkg")
 
 intersecsf$area <- sf::st_area(intersecsf) %>% units::set_units("Mha")
 intersecsf <- intersecsf[-c(1, 4, 9, 14, 17, 20), ] # remove the intersections with the biome itself
@@ -62,9 +62,24 @@ result <- intersec %>%
   dplyr::mutate(from = code_biome) %>%
   dplyr::mutate(to = code_biome.1) %>%
   dplyr::select(-non_native, -native_veg2, -code_biome, -code_biome.1) %>%
+  dplyr::mutate(perc = native_veg / total_area * 100) %>%
   dplyr::mutate(across(where(is.numeric), \(x) round(x, 2))) %>%
-  dplyr::relocate(from, to, total_area, native_veg, perc)
-
+  dplyr::relocate(from, to, total_area, native_veg, perc) %>%
+  dplyr::arrange(-perc) %>%
+  dplyr::mutate(from = dplyr::recode(from,   
+                                           "AMZ" = "Amazônia",
+                                           "CAAT" = "Caatinga",
+                                           "CER" = "Cerrado",
+                                           "MAT" = "Mata Atlântica",
+                                           "PMP" = "Pampa",
+                                           "PTN" = "Pantanal")) %>%
+  dplyr::mutate(to = dplyr::recode(to,   
+                                     "AMZ" = "Amazônia",
+                                     "CAAT" = "Caatinga",
+                                     "CER" = "Cerrado",
+                                     "MAT" = "Mata Atlântica",
+                                     "PMP" = "Pampa",
+                                     "PTN" = "Pantanal"))
 
 result %>%
   kableExtra::kbl(format = "latex")
@@ -76,7 +91,6 @@ decrease <- result %>%
 increase <- result %>%
   dplyr::group_by(to) %>%
   dplyr::summarise(increase = sum(native_veg))
-
 
 result <- cbind(decrease, increase) %>%
   dplyr::mutate(biome = from) %>%
