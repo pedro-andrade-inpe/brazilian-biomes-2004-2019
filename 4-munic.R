@@ -33,6 +33,17 @@ munic2 <- munic %>%
 
 write.csv(munic2, "results/overlap-munic2.csv")
 
+munic100 <- munic2 %>% 
+  dplyr::filter(perc >= 100)
+
+dim(munic100) # 160 municipalities changed 100% of their biomes
+  
+munic1 <- munic2 %>% 
+  dplyr::filter(perc > 0)
+
+dim(munic1) # 879 municipalities changed part of their biomes
+dim(munic1) / dim(munic2) # 15.7% of all the municipalities
+
 munic90 <- munic2 %>% 
   dplyr::filter(perc >= 90) %>%
   dplyr::group_by(abbrev_state) %>%

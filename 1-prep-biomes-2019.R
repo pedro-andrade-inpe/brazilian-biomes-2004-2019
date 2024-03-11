@@ -3,6 +3,9 @@ require(magrittr)
 brazil <- geobr::read_country() %>% sf::st_make_valid()
 units::install_unit("Mha", "1e6 ha")
 
+# File downloaded from
+# https://geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/vetores/Biomas_250mil.zip
+# This file is not yet available in geobr
 biomes2019 <- sf::read_sf("Biomas_250mil/lm_bioma_250.shp") %>%
   sf::st_transform(sf::st_crs(brazil)) %>%
   sf::st_make_valid() %>%
