@@ -48,7 +48,7 @@ tmap::tm_shape(states, bbox = c(-60, -31.0, -27.7, -2.7)) +
     col = "#404143", alpha = 0.7) +
   tmap::tm_add_legend(
     type = "fill",
-    labels = "Legal Amazon",
+    labels = "Legal Amazônia",
     col = "#4949b0", alpha = 0.4) +
   tmap::tm_legend(
     scale = 0.4,

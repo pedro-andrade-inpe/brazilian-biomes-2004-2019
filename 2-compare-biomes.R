@@ -47,3 +47,23 @@ result %>%
   units::drop_units() %>%
   kableExtra::kbl(format = "latex")
 
+############################
+
+oldarea2004 <- area2004
+oldarea2019 <- area2019
+
+area2004 <- as.numeric(as.data.frame(result)[7,2:8])
+area2019 <- as.numeric(as.data.frame(result)[,8])
+
+diff <- area2019 - area2004
+
+total_biomes <- tibble::tibble(name = c(biomes2004$code_biome, "Brazil"), area2004, area2019, diff) %>%
+  dplyr::mutate(delta = round(((area2019 / area2004) - 1) * 100, 2)) %>%
+  as.data.frame()
+
+names(total_biomes) <- c("Biome", "Area 2004 (Mha)", "Area 2019 (Mha)", "Difference", "Delta (%)")
+
+total_biomes %>%
+  units::drop_units() %>%
+  kableExtra::kbl(format = "latex")
+
