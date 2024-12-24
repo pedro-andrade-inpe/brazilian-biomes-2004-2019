@@ -33,11 +33,8 @@ to["New Biome"] <- c("Amazônia", "Caatinga", "Cerrado", "Mata Atlântica", "Pam
 
 pdf("changes-biomes-states.pdf", width = 3, height = 3)
 tmap::tm_shape(states, bbox = c(-60, -31.0, -27.7, -2.7)) +
+  tmap::tm_graticules(ticks = FALSE, col = "gray", lwd = 0.6, n.x = 4, n.y = 4, labels.size = 0.8, labels.inside.frame = TRUE) +
   tmap::tm_polygons(col = "#404143", alpha = 0.7) +
-#  tmap::tm_shape(amz) +
-#  tmap::tm_polygons(alpha = 0.4, col = "blue", border.col = "blue", lty = 0) +
-#  tmap::tm_shape(mat) +
-#  tmap::tm_polygons(alpha = 0.4, col = "red", border.col = "red", lty = 0) +
   tmap::tm_shape(legalamaz) +
   tmap::tm_polygons(alpha = 0.25, col = "#4949b0") +
   tmap::tm_shape(to) +
@@ -54,7 +51,10 @@ tmap::tm_shape(states, bbox = c(-60, -31.0, -27.7, -2.7)) +
     scale = 0.4,
     title.size = 1.5,
     text.size = 1.1,
+    bg.color = "grey85",
+    frame = "black",
     position = c("right","bottom")) +
-  tmap::tm_scale_bar(breaks = c(0, 250, 500, 1000), position = "RIGHT", text.size = 1)
+  tmap::tm_scale_bar(breaks = c(0, 250, 500, 1000), position = "RIGHT", text.size = 1) +
+  tmap::tm_compass(position = c("right", "top"), size = 4, text.size = 0.8, type = "8star")
 
 dev.off()
